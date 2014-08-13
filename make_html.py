@@ -146,6 +146,7 @@ def iati_stats_page(template, **kwargs):
             publishers_ordered_by_title=publishers_ordered_by_title,
             data_tickets=data_tickets,
             get_publisher_stats=get_publisher_stats,
+            get_dated_publisher_stats=get_dated_publisher_stats,
             set=set,
             **kwargs) 
     return f
@@ -204,15 +205,7 @@ slugs = {
 }
 app.jinja_env.globals['slugs'] = slugs
 
-from vars import expected_versions
-import github.web, licenses
-urls = {
-    'index.html': iati_stats_page('index.html', page='index'),
-    'headlines.html': iati_stats_page('headlines.html', page='headlines'),
-    'data_quality.html': iati_stats_page('data_quality.html', page='data_quality'),
-    'exploring_data.html': iati_stats_page('exploring_data.html', page='exploring_data'),
-    'publishers.html': iati_stats_page('publishers.html', page='publishers'),
-    'annualreport.html': iati_stats_page('annualreport.html', page='annualreport', annualreport_columns = {
+annualreport_columns = {
         '1.1': 'Timeliness of transaction data',
         '1.2': 'Frequency of updates',
         '1.3': 'Activity Forward Planning',
@@ -234,8 +227,20 @@ urls = {
         '6.2': 'Text of Conditions',
         '6.3': 'Results data (text)',
         '6.4': 'Results data (structured)'
-        
-    }),
+    }
+
+from vars import expected_versions
+import github.web, licenses
+urls = {
+    'index.html': iati_stats_page('index.html', page='index'),
+    'headlines.html': iati_stats_page('headlines.html', page='headlines'),
+    'data_quality.html': iati_stats_page('data_quality.html', page='data_quality'),
+    'exploring_data.html': iati_stats_page('exploring_data.html', page='exploring_data'),
+    'publishers.html': iati_stats_page('publishers.html', page='publishers'),
+    'annualreport.html': iati_stats_page('annualreport.html', page='annualreport', annualreport_columns=annualreport_columns),
+    'annualreport_by_stat.html': iati_stats_page('annualreport_by_stat.html', page='annualreport', annualreport_columns=annualreport_columns),
+    'annualreport_by_publisher.html': iati_stats_page('annualreport_by_publisher.html', page='annualreport', annualreport_columns=annualreport_columns),
+    'headlines.html': iati_stats_page('headlines.html', page='headlines'),
     'coverage.html': iati_stats_page('coverage.html', page='coverage', dac2012=dac2012, float=float),
     'timeliness.html': iati_stats_page('timeliness.html', page='timeliness'),
     'forwardlooking.html': iati_stats_page('forwardlooking.html', page='forwardlooking'),

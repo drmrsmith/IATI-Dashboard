@@ -62,6 +62,12 @@ def get_publisher_stats(publisher, stats_type='aggregated'):
     except IOError:
         return {}
 
+def get_dated_publisher_stats(publisher):
+    try:
+        return JSONDir('./stats-calculated/gitaggregate-publisher-dated/{0}'.format(publisher))
+    except IOError:
+        return {}
+
 
 current_stats = {
     'aggregated': JSONDir('./stats-calculated/current/aggregated'),

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import 'boxes.html' as boxes %}
+{% block content %}
+    <!--<p><a href="{{url('publishers.csv')}}">This table as CSV</a></p>-->
+
+    {% for methodlogy_id in current_stats.aggregated.annualreport %}
+    <h2>{{methodlogy_id}} {{annualreport_columns.get(methodlogy_id)}}</h2>
+
+    <!--<div class="panel panel-default">-->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Publisher Name</th>
+                <th>Activities at Lowest Hierarchy</th>
+                {% set dated_publisher_stats = get_dated_publisher_stats('dfid') %}<!-- FIXME!!! -->
+                {% for datetime in dated_publisher_stats.activities %}
+                <th>{{datetime}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for publisher, activities in current_stats.inverted_publisher.activities.items() %}
+            {% set dated_publisher_stats = get_dated_publisher_stats(publisher) %}
+            <tr>
+                <td><a href="publisher/{{publisher}}.html">{{publisher_name[publisher]}}</a></td>
+                <td>{{datetime}}</td>
+                <td>{{dated_publisher_stats.bottom_hierarchy[datetime].activities}}</td>
+                {% for datetime in dated_publisher_stats.activities %}
+                {% if datetime != 'Undefined' %}
+                {% if methodlogy_id in dated_publisher_stats.bottom_hierarchy[datetime].annualreport and dated_publisher_stats.bottom_hierarchy[datetime].annualreport_denominator[methodlogy_id] %}
+                    <td>{{(dated_publisher_stats.bottom_hierarchy[datetime].annualreport[methodlogy_id]/dated_publisher_stats.bottom_hierarchy[datetime].annualreport_denominator[methodlogy_id]*100)|round|int}}</td>
+                {% elif methodlogy_id in dated_publisher_stats.annualreport_textual[datetime] %}
+                    <td>{{dated_publisher_stats.annualreport_textual[datetime][methodlogy_id]}}</td>
+                {% elif dated_publisher_stats.annualreport_denominator[datetime][methodlogy_id] %}
+                    <td>{{(dated_publisher_stats.publisher_unique_identifiers[datetime]/dated_publisher_stats.annualreport_denominator[datetime][methodlogy_id]*100)|round|int}}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!--</div>-->
+
+    {% endfor %}
+{% endblock %}
