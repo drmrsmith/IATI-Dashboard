@@ -87,7 +87,7 @@
             <h3 class="panel-title">Assessment</h3>
         </div>
         <div class="panel-body">
-            {% block assessment_text %}{% endblock %}
+            {% block assessment_text %}<p>Only elements containing valid data are counted. Where applicable a total including invalid data is provided in parentheses.</p>{% endblock %}
         </div>
     </div>
     {% endblock %}
@@ -99,7 +99,7 @@
             <h3 class="panel-title">Exceptions</h3>
         </div>
         <div class="panel-body">
-            {% block exceptions_text %}{% endblock %}
+            {% block exceptions_text %}<p>Only current activities are checked. A current activity is one containing either i) an activity status of matching codelist values for 'implementing' or 'post-completion', ii) an actual end date within the past year, or iii) a planned end date greater than today.</p>{% endblock %}
         </div>
     </div>
     {% endblock %}
@@ -147,6 +147,7 @@ Else
     Activity is NOT at lowest hierarchical level
 </pre>
 
+
     <p>To test whether an activity is current:</p>
 
 <pre>
@@ -154,23 +155,23 @@ end dates =
     For each activity-date of type end-planned or end-actual
         Parse activity-date/@iso-date as an iso date ('yyyy-mm-dd...')
         If this does not work parse activity-date/text() as an iso date ('yyyy-mm-dd...')
-        If neither work, ignore this activity-date
+        If neither work, treat this activity as though an activity-date did not exist.
 
-If activity-status/@code exists
-    If activity-status/@code is 2 exists
+If there is no planned end date and activity-status/@code exists
+    If activity-status/@code is 2 or 4
         The activity is current
-    Else
+
+If there is an activity-date/@type is equivilent to 'end-actual'
+    If the end-actual date is greater or equal to the date one year ago 
         The activity is current
-Else
-    If end dates (see above) is empty
-        The activity is current
-    Else
-        If there is an end date where (date year >= current year)
-            The activity is current
-        Else
-            The activity is not current
     
+If there is an activity-date/@type is equivilent to 'end-planned'
+    If the end-planned date is today or in the future
+        The activity is current
+
+If none of these conditions are met, this is not a current activity.
 </pre>
+
 
     <p>To determine whether we use an activity is relevant for a given comprehensiveness test.</p>
 

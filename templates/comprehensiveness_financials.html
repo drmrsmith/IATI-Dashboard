@@ -18,11 +18,3 @@
 	<h5>Budget</h5>
 	<p>Percentage of all current activities that contain at least one valid budget entry. A valid budget entry must contain a valid <code>period-start</code> AND a valid <code>period-end</code> AND a valid <code>value</code> AND a valid <code>value-date</code>.</p>
 {% endblock %}
-
-{% block assessment_text %}
-	<p>Only elements containing valid data are counted. Where applicable a total including invalid data is provided in parentheses.</p>
-{% endblock %}
-
-{% block exceptions_text %}
-	<p>Only current activities are checked. A current activity is one with an activity status of implementing, a planned end date beyond today, or no end date.</p>
-{% endblock %}
